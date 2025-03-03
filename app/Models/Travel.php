@@ -12,7 +12,7 @@ class Travel extends Model
     protected $fillable = [
         'travel_title',
         'short_description',
-        'travel_main_photo',
+        'main_photo_url',
         'start_at',
         'end_at',
         'user_id',
@@ -26,6 +26,15 @@ class Travel extends Model
     public function travel_events(): HasMany
     {
         return $this->hasMany(TravelEvent::class, 'travel_id', 'id');
+    }
+
+    public function full_price(): float
+    {
+        $result_price = 0.00;
+        $events = $this->travel_events()->get();
+        foreach ($events as $event) {$result_price += $event->event_price;}
+
+        return $result_price;
     }
 
     public function travel_images(): HasMany

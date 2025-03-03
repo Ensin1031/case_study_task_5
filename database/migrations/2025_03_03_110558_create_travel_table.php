@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('travel_title')->comment('Заголовок');
             $table->text('short_description')->default('')->comment('Краткое описание');
-            $table->string('travel_main_photo')->nullable()->comment('Обложка');
+            $table->string('main_photo_url')->nullable()->comment('Обложка');
             $table->date('start_at')->comment('Дата начала');
             $table->date('end_at')->nullable()->comment('Дата окончания');
 

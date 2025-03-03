@@ -1,7 +1,7 @@
 <section>
     <header>
         <div class="flex justify-between items-center" style="min-height: 2.2rem;">
-            <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+            <h2 class="text-2xl font-medium text-gray-900 dark:text-gray-100">
                 {{ $title }}
             </h2>
             @auth
@@ -13,19 +13,9 @@
             @endauth
         </div>
     </header>
-
-    <div>
-        РЕДИРЕКТ: {{ $redirect_to }}
-    </div>
-    <div>
-        ЮЗЕР: {{ $user }}
-    </div>
-    <div>
-        ТРЕВЕЛЫ: {{ $travels }}
-    </div>
     <div class="mt-6 space-y-6">
         @foreach($travels as $travel)
-            <x-travel-card :travel="$travel" :need_subs_manager="true" :redirect_to="$redirect_to" class="mt-2"/>
+            <x-travel-card :travel="$travel" :can_edit="!!$user && $user->id == $travel->user_id" :redirect_to="$redirect_to" class="mt-2"/>
         @endforeach
     </div>
 </section>
@@ -55,7 +45,7 @@
             <!-- short_description -->
             <div>
                 <x-input-label for="short_description" :value="__('Краткое описание')" />
-                <textarea id="short_description" name="short_description" rows="3" class="mt-1 block w-full" style="resize: vertical;border-radius: 5px;border: 1px solid rgb(209 213 219 / var(--tw-border-opacity, 1));" required autocomplete="short_description">{{ old('short_description') }}</textarea>
+                <textarea id="short_description" name="short_description" rows="3" class="mt-1 block w-full" style="resize: vertical;border-radius: 5px;border: 1px solid rgb(209 213 219 / var(--tw-border-opacity, 1));" autocomplete="short_description">{{ old('short_description') }}</textarea>
                 <x-input-error class="mt-2" :messages="$errors->get('short_description')" />
             </div>
 
@@ -64,7 +54,7 @@
                 <div style="width: 49%;">
                     <x-input-label for="start_at" :value="__('Дата начала')" />
                     <x-text-input id="start_at" name="start_at" type="date" class="mt-1 block w-full" :value="old('start_at')" required autofocus autocomplete="start_at" />
-                    <x-input-error class="mt-2" :messages="$errors->get('travel_title')" />
+                    <x-input-error class="mt-2" :messages="$errors->get('start_at')" />
                 </div>
 
                 <!-- travel_main_photo -->
