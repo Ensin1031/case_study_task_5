@@ -9,8 +9,11 @@ use Illuminate\View\View;
 
 class TravelController extends Controller
 {
+    public function home() {
+        return redirect(route('index', absolute: false));
+    }
     public function index() {
-        return redirect(route('travels.travels', absolute: false));
+        return view('layouts.index');
     }
     public function show($id): View
     {

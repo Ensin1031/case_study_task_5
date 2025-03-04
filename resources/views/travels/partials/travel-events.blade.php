@@ -16,6 +16,7 @@
         </div>
     </header>
     <div class="mt-6 space-y-6">
+        <hr style="margin: 0;">
         @foreach($travel->travel_events as $travel_event)
             <x-travel-event-card :event="$travel_event" :can_edit="$can_edit" :redirect_to="$redirect_to " :query_parameters="$travel->id" class="mt-2"/>
             <hr style="margin: 0;">
@@ -47,8 +48,8 @@
 
             <!-- event_description -->
             <div>
-                <x-input-label for="event_description" :value="__('Краткое описание')" />
-                <textarea id="event_description" name="event_description" rows="3" class="mt-1 block w-full" style="resize: vertical;border-radius: 5px;border: 1px solid rgb(209 213 219 / var(--tw-border-opacity, 1));" autocomplete="event_description">{{ old('event_description') }}</textarea>
+                <x-input-label for="event_description" :value="__('Описание')" />
+                <textarea id="event_description" name="event_description" rows="7" class="mt-1 block w-full" style="resize: vertical;border-radius: 5px;border: 1px solid rgb(209 213 219 / var(--tw-border-opacity, 1));" autocomplete="event_description">{{ old('event_description') }}</textarea>
                 <x-input-error class="mt-2" :messages="$errors->get('event_description')" />
             </div>
 

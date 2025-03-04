@@ -1,4 +1,4 @@
-@props(['images' => [], 'size' => 150, 'title_font_size' => 12, 'can_edit' => false, 'redirect_to' => '', 'query_parameters' => []])
+@props(['images' => [], 'travel_id' => 0, 'event_id' => 0, 'size' => 150, 'title_font_size' => 12, 'can_edit' => false, 'redirect_to' => '', 'query_parameters' => []])
 
 @php
     $padding = 20;
@@ -13,24 +13,20 @@
             width: fit-content;
             align-items: center;
             & .images-slide-container {
-                width: {{ $size * $view_count + $padding * ($view_count - 1) }}px;
                 overflow: hidden;
-                margin: 0 {{ $size / $padding }}px;
                 & .images-work-container {
                     display: flex;
                     width: fit-content;
                     & .image-title-container {
-                        padding-bottom:10px;
+                        margin-bottom:10px;
                         cursor: default;
-                        font-size: {{ $title_font_size }}px;
-                        text-wrap: wrap;
+                        display: -webkit-box;
+                        -webkit-line-clamp: 2;
+                        -webkit-box-orient: vertical;
                         overflow: hidden;
-                        width: {{ $size }}px;
+                        text-wrap: wrap;
                     }
                     & .image-item-container {
-                        width: {{ $size }}px;
-                        height: {{ $size }}px;
-                        margin-right: {{ $padding }}px;
                         overflow: hidden;
                         & img {
                             object-fit: cover;
@@ -38,13 +34,9 @@
                             height: 100%;
                         }
                     }
-                    & .image-management-container {
-                        width: {{ $size }}px;
-                    }
                 }
             }
             .images-prev-btn, .images-next-btn {
-                height: {{ $size }}px;
                 display: flex;
                 align-items: center;
                 cursor: pointer;
@@ -55,18 +47,10 @@
             .images-prev-btn:active, .images-next-btn:active {
                 background-color: #eeeeee90;
             }
-            .images-prev-btn {
-                padding-left: {{ $size / $padding }}px;
-            }
-            .images-next-btn {
-                padding-right: {{ $size / $padding }}px;
-            }
             .arrow {
                 top: -5px;
                 content: "";
                 display: inline-block;
-                width: {{ $size / 10 }}px;
-                height: {{ $size / 10 }}px;
                 border-right: 0.2em solid black;
                 border-top: 0.2em solid black;
             }
@@ -79,11 +63,10 @@
         }
     </style>
     <script>
-        function slideToPrev() {
-            const container = document.querySelector('#carouselWorkContainer')
-            const blockValue = Number(!!container.style.webkitTransform ? container.style.webkitTransform.replace('translate3d(', '').replace('-', '').replace('px, 0px, 0px)', '') : '0')
+        function slideToPrev(block_id, step) {
+            const container = document.querySelector(`#${block_id}`)
+            const blockValue = Number(!!container?.style?.webkitTransform ? container.style.webkitTransform.replace('translate3d(', '').replace('-', '').replace('px, 0px, 0px)', '') : '0')
             const containerWidth = container.scrollWidth
-            const step = {{ $size + $padding }};
             let nextValue = blockValue - step;
             if (nextValue < 0) {
                 nextValue = containerWidth - step;
@@ -91,15 +74,14 @@
             setTimeout(function ()
             {
                 container.style.webkitTransitionDuration = "0.5s";
-                container.style.webkitTransitionTimingFunction = "marginLeft";
                 container.style.webkitTransform = `translate3d(-${nextValue}px, 0, 0)`;
+                console.log('PREV ===', container.style.webkitTransform, nextValue)
             }, 0);
         }
-        function slideToNext() {
-            const container = document.querySelector('#carouselWorkContainer')
-            const blockValue = Number(!!container.style.webkitTransform ? container.style.webkitTransform.replace('translate3d(', '').replace('-', '').replace('px, 0px, 0px)', '') : '0')
+        function slideToNext(block_id, step) {
+            const container = document.querySelector(`#${block_id}`)
+            const blockValue = Number(!!container?.style?.webkitTransform ? container.style.webkitTransform.replace('translate3d(', '').replace('-', '').replace('px, 0px, 0px)', '') : '0')
             const containerWidth = container.scrollWidth
-            const step = {{ $size + $padding }};
             let nextValue = blockValue + step;
             if (nextValue >= containerWidth) {
                 nextValue = 0
@@ -107,28 +89,27 @@
             setTimeout(function ()
             {
                 container.style.webkitTransitionDuration = "0.5s";
-                container.style.webkitTransitionTimingFunction = "marginLeft";
                 container.style.webkitTransform = `translate3d(-${nextValue}px, 0, 0)`;
             }, 0);
         }
     </script>
     <div class="w-full">
         <div class="images-container">
-            <div class="images-prev-btn" onclick="slideToPrev()">
-                <div class="arrow left-arrow" aria-hidden="true"></div>
+            <div class="images-prev-btn" style="height: {{ $size }}px;padding-left: {{ $size / $padding }}px;" onclick="slideToPrev('carouselWorkContainer_{{ $travel_id }}_{{ $event_id }}', {{ $size + $padding }})">
+                <div class="arrow left-arrow" aria-hidden="true" style="width: {{ $size / 10 }}px;height: {{ $size / 10 }}px;"></div>
             </div>
-            <div class="images-slide-container">
-                <div class="images-work-container m-0" id="carouselWorkContainer">
+            <div class="images-slide-container" style="width: {{ $size * $view_count + $padding * ($view_count - 1) }}px;margin: 0 {{ $size / $padding }}px;">
+                <div class="images-work-container m-0" id="carouselWorkContainer_{{ $travel_id }}_{{ $event_id }}">
                     @foreach($images as $image)
                         <div>
-                            <div class="image-title-container">
+                            <div class="image-title-container" style="font-size: {{ $title_font_size }}px;width: {{ $size }}px;">
                                 {{ $image->image_title }}
                             </div>
-                            <div class="image-item-container">
+                            <div class="image-item-container" style="width: {{ $size }}px;height: {{ $size }}px;margin-right: {{ $padding }}px;">
                                 <a href="{{ url($image->url) }}" target="_blank"><img src="{{ $image->url }}" alt="{{ $image->image_title }}"></a>
                             </div>
                             @if($can_edit)
-                                <div class="image-management-container flex justify-around items-center">
+                                <div class="image-management-container flex justify-around items-center" style="width: {{ $size }}px;">
                                     <x-secondary-button
                                         style="padding: .2rem;border: none;display: flex;width: 3rem;height: 3rem;"
                                         x-data=""
@@ -152,8 +133,8 @@
                     @endforeach
                 </div>
             </div>
-            <div class="images-next-btn" onclick="slideToNext()">
-                <div class="arrow right-arrow" aria-hidden="true"></div>
+            <div class="images-next-btn" style="height: {{ $size }}px;padding-right: {{ $size / $padding }}px;" onclick="slideToNext('carouselWorkContainer_{{ $travel_id }}_{{ $event_id }}', {{ $size + $padding }})">
+                <div class="arrow right-arrow" aria-hidden="true" style="width: {{ $size / 10 }}px;height: {{ $size / 10 }}px;"></div>
             </div>
         </div>
     </div>
