@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('url')->comment('URL файла');
 
             $table->unsignedBigInteger('travel_id')->comment('Путешествие');
-            $table->unsignedBigInteger('travel_event_id')->comment('Событие путешествия');
+            $table->unsignedBigInteger('travel_event_id')->nullable()->comment('Событие путешествия');
 
             $table->index('travel_id', 'image_travel_idx');
             $table->index('travel_event_id', 'image_travel_event_idx');
