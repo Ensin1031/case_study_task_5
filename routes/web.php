@@ -7,7 +7,8 @@ use App\Http\Controllers\TravelImageController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([], function () {
-    Route::get('/', [TravelController::class, 'index'])->name('home');
+    Route::get('/', [TravelController::class, 'home'])->name('home');
+    Route::get('/index', [TravelController::class, 'index'])->name('index');
     Route::get('/travels', [TravelController::class, 'common_index'])->name('travels.travels');
     Route::get('/user-travels', [TravelController::class, 'user_index'])->name('travels.user-travels');
     Route::get('/travels/{id}', [TravelController::class, 'show'])->name('travels.travel-show');
@@ -21,7 +22,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/travels/destroy', [TravelController::class, 'destroy'])->name('travel.destroy');
 
     Route::post('/travel-events/create', [TravelEventController::class, 'store'])->name('travel-events.create');
-    Route::patch('/travel-events/update', [TravelEventController::class, 'update'])->name('travel-events.update');
+    Route::patch('/travel-events/update-header', [TravelEventController::class, 'update_header'])->name('travel-events.update-header');
+    Route::patch('/travel-events/update-description', [TravelEventController::class, 'update_description'])->name('travel-events.update-description');
+    Route::patch('/travel-events/update-price', [TravelEventController::class, 'update_price'])->name('travel-events.update-price');
     Route::delete('/travel-events/destroy', [TravelEventController::class, 'destroy'])->name('travel-events.destroy');
 
     Route::post('/travel-images/create', [TravelImageController::class, 'store'])->name('travel-images.create');

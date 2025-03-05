@@ -88,7 +88,7 @@
             @endif
 
             @if(!!$need_full_content)
-                <x-images-slider :images="$travel->travel_images" :size="160" :can_edit="$can_edit" :redirect_to="$redirect_to" :query_parameters="$query_parameters"/>
+                <x-images-slider :images="$travel->travel_images" :travel_id="$travel->id" :size="160" :can_edit="$can_edit" :redirect_to="$redirect_to" :query_parameters="$query_parameters"/>
             @endif
         </div>
     @endif

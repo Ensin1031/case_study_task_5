@@ -35,7 +35,7 @@ class TravelEventController extends Controller
         return redirect(route($redirect_to, $parameters, absolute: false));
     }
 
-    public function update(Request $request): RedirectResponse
+    public function update_header(Request $request): RedirectResponse
     {
         $query = $request->query();
         $redirect_to = 'travels.user-travels';
@@ -46,6 +46,65 @@ class TravelEventController extends Controller
         if (array_key_exists("query_parameters", $query)) {
             $parameters = $query["query_parameters"];
         }
+
+        $request->validate([
+            'id' => ['required', 'integer'],
+            'event_at' => ['required'],
+        ]);
+        $event = TravelEvent::findOrFail($request->id);
+
+        $event->update([
+            'event_title' => $request->event_title ?? '',
+            'event_at' => date_create($request->event_at)->format('Y-m-d H:i:s'),
+        ]);
+
+        return redirect(route($redirect_to, $parameters, absolute: false));
+    }
+
+    public function update_description(Request $request): RedirectResponse
+    {
+        $query = $request->query();
+        $redirect_to = 'travels.user-travels';
+        $parameters = [];
+        if (array_key_exists("redirect_to", $query)) {
+            $redirect_to = $query["redirect_to"];
+        }
+        if (array_key_exists("query_parameters", $query)) {
+            $parameters = $query["query_parameters"];
+        }
+
+        $request->validate([
+            'id' => ['required', 'integer'],
+        ]);
+        $event = TravelEvent::findOrFail($request->id);
+
+        $event->update([
+            'event_description' => $request->event_description ?? '',
+        ]);
+
+        return redirect(route($redirect_to, $parameters, absolute: false));
+    }
+
+    public function update_price(Request $request): RedirectResponse
+    {
+        $query = $request->query();
+        $redirect_to = 'travels.user-travels';
+        $parameters = [];
+        if (array_key_exists("redirect_to", $query)) {
+            $redirect_to = $query["redirect_to"];
+        }
+        if (array_key_exists("query_parameters", $query)) {
+            $parameters = $query["query_parameters"];
+        }
+
+        $request->validate([
+            'id' => ['required', 'integer'],
+        ]);
+        $event = TravelEvent::findOrFail($request->id);
+
+        $event->update([
+            'event_price' => $request->event_price ?? 0,
+        ]);
 
         return redirect(route($redirect_to, $parameters, absolute: false));
     }
@@ -67,9 +126,7 @@ class TravelEventController extends Controller
         ]);
         $event = TravelEvent::findOrFail($request->id);
 
-        if ($event) {
-            $event->delete();
-        }
+        $event->delete();
 
         return redirect(route($redirect_to, $parameters, absolute: false));
     }
