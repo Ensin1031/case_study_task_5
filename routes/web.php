@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/travel-events/update-header', [TravelEventController::class, 'update_header'])->name('travel-events.update-header');
     Route::patch('/travel-events/update-description', [TravelEventController::class, 'update_description'])->name('travel-events.update-description');
     Route::patch('/travel-events/update-price', [TravelEventController::class, 'update_price'])->name('travel-events.update-price');
+    Route::patch('/travel-events/update-status', [TravelEventController::class, 'update_status'])->name('travel-events.update-status');
     Route::delete('/travel-events/destroy', [TravelEventController::class, 'destroy'])->name('travel-events.destroy');
 
     Route::post('/travel-images/create', [TravelImageController::class, 'store'])->name('travel-images.create');
