@@ -28,7 +28,7 @@
             @endisset
 
             <!-- Page Content -->
-            <main class="pt-16">
+            <main style="padding-top: 4rem !important;">
                 {{ $slot }}
             </main>
         </div>
