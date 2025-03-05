@@ -22,7 +22,7 @@
 
 @auth
     <x-modal name="create-travel-{{ $user->id }}" focusable>
-        <form method="post" action="{{ route('travel.create', ['redirect_to' => $redirect_to]) }}" class="p-6" enctype="multipart/form-data">
+        <form method="post" action="{{ route('travel.create', ['redirect_to' => $redirect_to]) }}" class="p-6 flex flex-col gap-2" enctype="multipart/form-data">
             @csrf
             @method('post')
 

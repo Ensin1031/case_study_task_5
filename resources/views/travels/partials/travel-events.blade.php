@@ -26,7 +26,7 @@
 
 @auth
     <x-modal name="create-travel-event-{{ $travel->id }}" focusable>
-        <form method="post" action="{{ route('travel-events.create', ['redirect_to' => $redirect_to, 'query_parameters' => $query_parameters]) }}" class="p-6" enctype="multipart/form-data">
+        <form method="post" action="{{ route('travel-events.create', ['redirect_to' => $redirect_to, 'query_parameters' => $query_parameters]) }}" class="p-6 flex flex-col gap-2" enctype="multipart/form-data">
             @csrf
             @method('post')
 
@@ -66,6 +66,18 @@
                     <x-input-label for="event_price" :value="__('Потрачено за событие')" />
                     <x-text-input id="event_price" name="event_price" type="number" step="0.01" min="0.00" class="mt-1 block w-full" :value="old('event_price')" autocomplete="event_price" />
                     <x-input-error class="mt-2" :messages="$errors->get('event_price')" />
+                </div>
+            </div>
+
+            {{-- event_score --}}
+            <div>
+                <x-input-label for="event_score" :value="__('Оценка события')" />
+                <div class="flex justify-between gap-4 mt-1">
+                    <select name="event_score" id="event_score" class="block w-full" style="border-radius: 5px;border: 1px solid rgb(209 213 219 / var(--tw-border-opacity, 1))">
+                        @foreach(\App\Models\TravelEvent::EVENT_SCORES as $score)
+                            <option value="{{ $score['id'] }}">{{ $score['title'] }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
 

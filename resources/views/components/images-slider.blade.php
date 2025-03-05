@@ -95,9 +95,11 @@
     </script>
     <div class="w-full">
         <div class="images-container">
-            <div class="images-prev-btn" style="height: {{ $size }}px;padding-left: {{ $size / $padding }}px;" onclick="slideToPrev('carouselWorkContainer_{{ $travel_id }}_{{ $event_id }}', {{ $size + $padding }})">
-                <div class="arrow left-arrow" aria-hidden="true" style="width: {{ $size / 10 }}px;height: {{ $size / 10 }}px;"></div>
-            </div>
+            @if(count($images) > 1)
+                <div class="images-prev-btn" style="height: {{ $size }}px;padding-left: {{ $size / $padding }}px;" onclick="slideToPrev('carouselWorkContainer_{{ $travel_id }}_{{ $event_id }}', {{ $size + $padding }})">
+                    <div class="arrow left-arrow" aria-hidden="true" style="width: {{ $size / 10 }}px;height: {{ $size / 10 }}px;"></div>
+                </div>
+            @endif
             <div class="images-slide-container" style="width: {{ $size * $view_count + $padding * ($view_count - 1) }}px;margin: 0 {{ $size / $padding }}px;">
                 <div class="images-work-container m-0" id="carouselWorkContainer_{{ $travel_id }}_{{ $event_id }}">
                     @foreach($images as $image)
@@ -133,9 +135,11 @@
                     @endforeach
                 </div>
             </div>
-            <div class="images-next-btn" style="height: {{ $size }}px;padding-right: {{ $size / $padding }}px;" onclick="slideToNext('carouselWorkContainer_{{ $travel_id }}_{{ $event_id }}', {{ $size + $padding }})">
-                <div class="arrow right-arrow" aria-hidden="true" style="width: {{ $size / 10 }}px;height: {{ $size / 10 }}px;"></div>
-            </div>
+            @if(count($images) > 1)
+                <div class="images-next-btn" style="height: {{ $size }}px;padding-right: {{ $size / $padding }}px;" onclick="slideToNext('carouselWorkContainer_{{ $travel_id }}_{{ $event_id }}', {{ $size + $padding }})">
+                    <div class="arrow right-arrow" aria-hidden="true" style="width: {{ $size / 10 }}px;height: {{ $size / 10 }}px;"></div>
+                </div>
+            @endif
         </div>
     </div>
 @endif

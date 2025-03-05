@@ -109,6 +109,31 @@ class TravelEventController extends Controller
         return redirect(route($redirect_to, $parameters, absolute: false));
     }
 
+    public function update_status(Request $request): RedirectResponse
+    {
+        $query = $request->query();
+        $redirect_to = 'travels.user-travels';
+        $parameters = [];
+        if (array_key_exists("redirect_to", $query)) {
+            $redirect_to = $query["redirect_to"];
+        }
+        if (array_key_exists("query_parameters", $query)) {
+            $parameters = $query["query_parameters"];
+        }
+
+        $request->validate([
+            'id' => ['required', 'integer'],
+            'event_score' => ['required', 'integer', 'min:1', 'max:5'],
+        ]);
+        $event = TravelEvent::findOrFail($request->id);
+
+        $event->update([
+            'event_score' => $request->event_score,
+        ]);
+
+        return redirect(route($redirect_to, $parameters, absolute: false));
+    }
+
     public function destroy(Request $request): RedirectResponse
     {
         $query = $request->query();

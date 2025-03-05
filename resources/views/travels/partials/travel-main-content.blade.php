@@ -88,7 +88,9 @@
             @endif
 
             @if(!!$need_full_content)
-                <x-images-slider :images="$travel->travel_images" :travel_id="$travel->id" :size="160" :can_edit="$can_edit" :redirect_to="$redirect_to" :query_parameters="$query_parameters"/>
+                <div class="flex justify-center">
+                    <x-images-slider :images="$travel->travel_images" :travel_id="$travel->id" :size="160" :can_edit="$can_edit" :redirect_to="$redirect_to" :query_parameters="$query_parameters"/>
+                </div>
             @endif
         </div>
     @endif
@@ -129,17 +131,13 @@
         </x-modal>
 
         <x-modal name="update-travel-start_at-{{ $travel->id }}" focusable>
-            <form method="post" action="{{ route('travel.update-travel-dates', ['redirect_to' => $redirect_to, 'query_parameters' => $query_parameters]) }}" class="p-6" enctype="multipart/form-data">
+            <form method="post" action="{{ route('travel.update-travel-dates', ['redirect_to' => $redirect_to, 'query_parameters' => $query_parameters]) }}" class="p-6 flex flex-col gap-2" enctype="multipart/form-data">
                 @csrf
                 @method('patch')
 
                 <h2 class="text-lg font-medium text-gray-900">
-                    {{ __('Закончить путешествие') }}?
+                    {{ __('Сменить дату начала путешествия') }}
                 </h2>
-
-                <p class="mt-1 text-sm text-gray-600">
-                    {{ __('Внесите дату начала путешествия') }}
-                </p>
 
                 <!-- id -->
                 <div style="display: none;">
@@ -203,7 +201,7 @@
         </x-modal>
 
         <x-modal name="update-travel-{{ $travel->id }}" focusable>
-            <form method="post" action="{{ route('travel.update', ['redirect_to' => $redirect_to, 'query_parameters' => $query_parameters]) }}" class="p-6">
+            <form method="post" action="{{ route('travel.update', ['redirect_to' => $redirect_to, 'query_parameters' => $query_parameters]) }}" class="p-6 flex flex-col gap-2">
                 @csrf
                 @method('patch')
 
@@ -267,7 +265,7 @@
         </x-modal>
 
         <x-modal name="create-travel-photos-{{ $travel->id }}" focusable>
-            <form method="post" action="{{ route('travel-images.create', ['redirect_to' => $redirect_to, 'query_parameters' => $query_parameters]) }}" class="p-6" enctype="multipart/form-data">
+            <form method="post" action="{{ route('travel-images.create', ['redirect_to' => $redirect_to, 'query_parameters' => $query_parameters]) }}" class="p-6 flex flex-col gap-2" enctype="multipart/form-data">
                 @csrf
                 @method('post')
 
@@ -368,7 +366,7 @@
         </x-modal>
 
         <x-modal name="update-image-title" id="delete-image" focusable>
-            <form method="post" action="{{ route('travel-images.update', ['redirect_to' => $redirect_to, 'query_parameters' => $query_parameters]) }}" class="p-6" enctype="multipart/form-data">
+            <form method="post" action="{{ route('travel-images.update', ['redirect_to' => $redirect_to, 'query_parameters' => $query_parameters]) }}" class="p-6 flex flex-col gap-2" enctype="multipart/form-data">
                 @csrf
                 @method('patch')
 
