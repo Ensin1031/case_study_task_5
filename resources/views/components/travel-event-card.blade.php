@@ -23,23 +23,33 @@
             <div class="mb-2 mt-1">
                 <x-event-score-status :score_data="$event->score_data()" />
             </div>
-            <h2 class="mb-2 text-lg font-medium text-gray-900 dark:text-gray-100" style="display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;overflow: hidden;">
-                <span class="flex gap-2 text-nowrap">
+            <div class="mb-2 mt-1 flex gap-2">
+                <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100" style="display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;overflow: hidden;">
                     <span>{{ date_create($event->event_at)->format('d.m.Y H:i') }}</span>
-                    <span>{{ $event->event_title }}</span>
-                    @if(!!$can_edit)
-                        <x-secondary-button
-                                style="padding: .2rem;border: none;"
-                                x-data=""
-                                x-on:click.prevent="$dispatch('open-modal', 'update-event-header-{{ $event->id }}')"
-                        >
+                    <span class="pl-1">{{ $event->event_title }}</span>
+                </h2>
+                @if(!!$can_edit)
+                    <x-secondary-button
+                        style="padding: .2rem;border: none;"
+                        x-data=""
+                        x-on:click.prevent="$dispatch('open-modal', 'update-event-header-{{ $event->id }}')"
+                    >
                         <x-update-icon class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </x-secondary-button>
-                    @endif
-                </span>
-            </h2>
-            <div class="pb-2">
-                <span>{{ $event->event_description }}</span>
+                @endif
+            </div>
+            <div class="pb-2" id="description_block_{{ $event->travel_id }}_{{ $event->id }}_">
+                <span id="description_{{ $event->travel_id }}_{{ $event->id }}_">{{ substr($event->event_description, 0, 300) }}</span>
+                @if(strlen($event->event_description) > 300)
+                    <span
+                        class="hover:underline"
+                        style="color: blue;cursor: pointer;font-size: .825rem;"
+                        id="description_postfix_{{ $event->travel_id }}_{{ $event->id }}_"
+                        data-full_view="1"
+                        data-description_row="{{ $event->event_description }}"
+                        onclick="setEventDescriptionViewBlock(300, {!! json_encode($event->travel_id ?? 0) !!}, {!! json_encode($event->id ?? 0) !!})"
+                    > . . . показать полностью</span>
+                @endif
             </div>
             <div class="flex items-center gap-2 pb-2">
                 Потрачено за событие: <h2 class="text-lg font-medium text-gray-900">{{ $event->event_price }} ₽</h2>
@@ -67,9 +77,80 @@
                     </x-secondary-button>
                 @endif
             </div>
+            @if(!!(count($event->event_map_coordinates()) > 0))
+                <details class="w-full">
+                    <summary class="flex flex-row gap-2 items-center" style="cursor: pointer;">
+                        <span class="flex items-center justify-center" style="width: 1.5rem;height: 1.5rem;font-size: 1.3rem;padding-bottom: .12rem;border: 1px solid #111827; border-radius: 3px;">-</span>
+                        <span class="text-lg font-medium text-gray-900">{{ __('Сохраненные координаты события') }}</span>
+                    </summary>
+                    <div style="border: 1px solid #bbb;border-radius: 5px;padding: .5rem;">
+                        @if(!!$can_edit)
+                            <div class="mb-2">
+                                <x-secondary-button
+                                    x-data=""
+                                    data-event_id="{{$event->id}}"
+                                    x-on:click.prevent="$dispatch('open-modal', 'create-user-coordinates-{{ $event->travel_id }}')"
+                                >Добавить событие на карту</x-secondary-button>
+                            </div>
+                        @endif
+                        @foreach($event->event_map_coordinates() as $marker)
+                            <div class="pl-2 pb-2">
+                                <div class="flex items-center gap-2">
+                                    <a class="hover:underline" style="display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;overflow: hidden;" href="#main_travel_map_{{$event->travel_id}}" onclick="goToMapObjPoint({{ json_encode($marker ?? []) }})">
+                                        {{$marker['title']}}
+                                    </a>
+                                    @if(!!$can_edit)
+                                        <div class="flex gap-2">
+                                            <x-secondary-button
+                                                style="padding: 0;border: none;width: 18px;height: 18px;"
+                                                x-data=""
+                                                data-coord_id="{{ $marker['id'] }}"
+                                                data-coord_title="{{ $marker['title'] }}"
+                                                data-coord_description="{{ $marker['description'] }}"
+                                                data-coord_lat="{{ $marker['position']['lat'] }}"
+                                                data-coord_lng="{{ $marker['position']['lng'] }}"
+                                                x-on:click.prevent="$dispatch('open-modal', 'update-coordinates')"
+                                            >
+                                                <x-update-icon class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                                            </x-secondary-button>
+                                            <x-secondary-button
+                                                style="padding: 0;border: none;width: 18px;height: 18px;"
+                                                x-data=""
+                                                data-coord_id="{{ $marker['id'] }}"
+                                                x-on:click.prevent="$dispatch('open-modal', 'delete-coordinates')"
+                                            >
+                                                <x-delete-icon class="block h-9 w-auto fill-current text-gray-800 dark:text-gray-200" />
+                                            </x-secondary-button>
+                                        </div>
+                                    @endif
+                                </div>
+                                <div class="pl-2" id="description_block_{{ $event->travel_id }}_{{ $event->id }}_{{ $marker['id'] }}">
+                                    <span id="description_{{ $event->travel_id }}_{{ $event->id }}_{{ $marker['id'] }}" style="font-size: .825rem;color: #666;">{{ substr($marker['description'], 0, 150) }}</span>
+                                    @if(strlen($marker['description']) > 150)
+                                        <span
+                                            class="hover:underline"
+                                            style="color: blue;cursor: pointer;font-size: .825rem;"
+                                            id="description_postfix_{{ $event->travel_id }}_{{ $event->id }}_{{ $marker['id'] }}"
+                                            data-full_view="1"
+                                            data-description_row="{{ $marker['description'] }}"
+                                            onclick="setEventDescriptionViewBlock(150, {!! json_encode($event->travel_id ?? 0) !!}, {!! json_encode($event->id ?? 0) !!}, {!! json_encode($marker['id'] ?? 0) !!})"
+                                        > . . . показать полностью</span>
+                                    @endif
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </details>
+            @elseif(!!$can_edit)
+                <x-secondary-button
+                    x-data=""
+                    data-event_id="{{$event->id}}"
+                    x-on:click.prevent="$dispatch('open-modal', 'create-user-coordinates-{{ $event->travel_id }}')"
+                >Добавить событие на карту</x-secondary-button>
+            @endif
         </div>
         @if(!!$can_edit)
-            <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-2" style="margin-left: 1rem;">
                 <x-primary-button
                         class="w-full"
                         x-data=""

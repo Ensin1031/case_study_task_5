@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TravelController;
 use App\Http\Controllers\TravelEventController;
 use App\Http\Controllers\TravelImageController;
+use App\Http\Controllers\TravelMapCoordinatesController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([], function () {
@@ -27,6 +28,10 @@ Route::middleware('auth')->group(function () {
     Route::patch('/travel-events/update-price', [TravelEventController::class, 'update_price'])->name('travel-events.update-price');
     Route::patch('/travel-events/update-status', [TravelEventController::class, 'update_status'])->name('travel-events.update-status');
     Route::delete('/travel-events/destroy', [TravelEventController::class, 'destroy'])->name('travel-events.destroy');
+
+    Route::post('/travel-map-coordinates/create', [TravelMapCoordinatesController::class, 'store'])->name('travel-map-coordinates.create');
+    Route::patch('/travel-map-coordinates/update', [TravelMapCoordinatesController::class, 'update'])->name('travel-map-coordinates.update');
+    Route::delete('/travel-map-coordinates/destroy', [TravelMapCoordinatesController::class, 'destroy'])->name('travel-map-coordinates.destroy');
 
     Route::post('/travel-images/create', [TravelImageController::class, 'store'])->name('travel-images.create');
     Route::patch('/travel-images/update', [TravelImageController::class, 'update'])->name('travel-images.update');
