@@ -42,4 +42,14 @@ class Travel extends Model
         return $this->hasMany(TravelImage::class, 'travel_id', 'id');
     }
 
+    public function travel_coordinates(): HasMany
+    {
+        return $this->hasMany(EventMapCoordinates::class, 'travel_id', 'id');
+    }
+
+    public function travel_map_coordinates(): array
+    {
+        return coordinates_view_data(coordinates: $this->travel_coordinates()->get());
+    }
+
 }

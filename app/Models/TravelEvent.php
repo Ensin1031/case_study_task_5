@@ -80,4 +80,14 @@ class TravelEvent extends Model
         return $this->hasMany(TravelImage::class, 'travel_event_id', 'id');
     }
 
+    public function event_coordinates(): HasMany
+    {
+        return $this->hasMany(EventMapCoordinates::class, 'travel_event_id', 'id');
+    }
+
+    public function event_map_coordinates(): array
+    {
+        return coordinates_view_data(coordinates: $this->event_coordinates()->get());
+    }
+
 }
